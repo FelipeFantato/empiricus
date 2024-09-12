@@ -21,4 +21,20 @@ public class Emails {
     private String email;
     private Date dataCriacao;
     private Date dataAtualizacao;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(long idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+    public void setEmail(String email){
+        this.email = email;
+    }
+
 }

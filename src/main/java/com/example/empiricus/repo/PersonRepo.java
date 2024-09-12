@@ -5,11 +5,14 @@ import com.example.empiricus.model.Usuarios;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
+import java.util.List;
+
 @RepositoryRestResource
 public interface PersonRepo extends JpaRepository<Usuarios, Long> {
     Usuarios findByNomeAndPassword(String nome, String password);
 
-    Usuarios findByNome(String nome);
+    List<Usuarios> findByNome(String nome);
+
 
 
 }

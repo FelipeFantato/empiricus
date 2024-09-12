@@ -1,122 +1,87 @@
 package com.example.empiricus;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+
+import com.example.empiricus.PersonController;
 import com.example.empiricus.model.SessionManager;
 import com.example.empiricus.model.Usuarios;
-import com.example.empiricus.repo.EmailRepo;
 import com.example.empiricus.repo.PersonRepo;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-@DataJpaTest
-@ActiveProfiles("test")
-class PersonControllerTest {
+import java.util.Arrays;
+import java.util.List;
+
+@SpringBootTest
+public class PersonControllerTest {
 
     @Mock
     private EmailSenderService emailSenderService;
 
     @Autowired
-    PersonRepo PersonRepo;
-    @Mock
-    @Qualifier("emailRepo") // Use o nome do bean correto
-    EmailRepo emailrepo;
+    private SessionManager sessionManager;
 
-    private SessionManager sessionManager = new SessionManager();
+    @Autowired
+    private PersonRepo repo;
 
+    @Autowired
+    private PersonController personController;
+
+    public String token;
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
-    @Test
-    @DisplayName("Teste de login Sucesso É Admin")
-    void loginCase1() {
-        Usuarios usuarioLogando = new Usuarios();
-        usuarioLogando.setNome("Felipe");
-        usuarioLogando.setPassword("123456");
-        usuarioLogando.setEh_admin(true);
-        PersonRepo.save(usuarioLogando);
-
-        Usuarios usuarioNoBanco = PersonRepo.findByNomeAndPassword("Felipe", "123456");
-
-        assertThat(usuarioNoBanco.isEh_admin()).isTrue();
-    }
-
-    @Test
-    @DisplayName("Teste de login Falha Nao é Admin")
-    void loginCase2() {
-        Usuarios usuarioLogando = new Usuarios();
-        usuarioLogando.setNome("Felipe");
-        usuarioLogando.setPassword("123456");
-        usuarioLogando.setEh_admin(false);
-        PersonRepo.save(usuarioLogando);
-        Usuarios usuarioNoBanco = PersonRepo.findByNomeAndPassword("Felipe", "123456");
-
-        assertThat(usuarioNoBanco.isEh_admin()).isFalse();
-
-    }
-    @Test
-    @DisplayName("Deleta Usuario existente")
-    void deletaUsuarioCase1() {
-        Usuarios usuarioLogando = new Usuarios();
-        usuarioLogando.setNome("Felipe");
-        usuarioLogando.setPassword("123456");
-        usuarioLogando.setEh_admin(true);
-        PersonRepo.save(usuarioLogando);
-
-        PersonRepo.delete(usuarioLogando);
-        assertThat(PersonRepo.findByNomeAndPassword("Felipe", "123456")).isNull();
-    }
-
-    @Test
-    @DisplayName("Deleta Usuario inexistente")
-    void deletaUsuarioCase2() {
-        Usuarios usuarioLogando = new Usuarios();
-        usuarioLogando.setNome("Felipe");
-        usuarioLogando.setPassword("123456");
-        usuarioLogando.setEh_admin(true);
-
-
-        PersonRepo.delete(usuarioLogando);
-        assertThat(PersonRepo.findByNomeAndPassword("Felipe", "123456")).isNull();
-    }
-
-    @Test
-    @DisplayName("Altera Usuario Válido")
-    void alteraUsuario() {
-
+        MockitoAnnotations.openMocks(this);
 
     }
 
     @Test
-    void retornaUsuario() {
+    void returnAll_ShouldReturnUsers_WhenValidToken() {
+        // Dados de teste
+        Usuarios user1 = new Usuarios("1", "User One", true);
+        Usuarios user2 = new Usuarios("2", "User Two", true);
+        List<Usuarios> users = Arrays.asList(user1, user2);
+
+        token = this.sessionManager.createSession(user1);
+        // Configuração dos mocks
+        String token = this.sessionManager.createSession(user1);
+
+        //when(sessionManager.getUser("Valid_token")).thenReturn(user1);
+        //when(this.repo.findAll()).thenReturn(users);
+
+
+        ResponseEntity<List<Usuarios>> responseEntity = this.personController.returnAll(token);
+
+        // Verificação e asserção
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(responseEntity.getBody());
+        assertEquals(2, responseEntity.getBody().size());
+        assertTrue(responseEntity.getBody().contains(user1));
+        assertTrue(responseEntity.getBody().contains(user2));
     }
 
     @Test
-    void addPerson() {
-    }
+    void returnAll_ShouldReturnUnauthorized_WhenInvalidToken() {
+        // Configuração do mock
+        when(sessionManager.getUser("Invalid_token")).thenReturn(null);
 
-    @Test
-    void addEmail() {
-    }
+        // Chamada ao método do controller
+        ResponseEntity<List<Usuarios>> responseEntity = personController.returnAll("Invalid_token");
 
-    @Test
-    void retornaEmailsUsuario() {
-    }
-
-    @Test
-    void retornaTodosEmails() {
-    }
-
-    @Test
-    void deletaEmail() {
+        // Verificação e asserção
+        assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
+        assertNull(responseEntity.getBody());
     }
 }

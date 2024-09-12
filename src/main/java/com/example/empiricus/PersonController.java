@@ -32,7 +32,7 @@ public class PersonController {
     @Autowired
     @Qualifier("emailRepo") // Use o nome do bean correto
     EmailRepo emailrepo;
-    private SessionManager sessionManager = new SessionManager();
+    private static SessionManager sessionManager = new SessionManager();
 
 
     @PostMapping("/api/login")
@@ -55,7 +55,7 @@ public class PersonController {
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario não esta logado.");
         }
-        Usuarios usuarioDeletar= repo.findByNome(nome);
+        Usuarios usuarioDeletar= repo.findByNome(nome).get(0);
 
         if( usuarioDeletar == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não existe.");
@@ -80,7 +80,7 @@ public class PersonController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        Usuarios pessoa = repo.findByNome(nome);
+        Usuarios pessoa = repo.findByNome(nome).get(0);
         if (pessoa == null) {
             return ResponseEntity.notFound().build();
         }
@@ -112,7 +112,7 @@ public class PersonController {
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        Usuarios pessoa = repo.findByNome(nome);
+        Usuarios pessoa = repo.findByNome(nome).get(0);
         if (pessoa == null) {
             return ResponseEntity.notFound().build();
         }
@@ -142,6 +142,9 @@ public class PersonController {
         if (!Objects.equals(person.camposCertos(), "OK")) {
             return ResponseEntity.badRequest().body(person.camposCertos());
         }
+        if(person.getCpf().length() < 11){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("CPF com menos de 11 digitos. Favor tentar novamente.");
+        }
         repo.save(person);
         return ResponseEntity.ok("Usuário adicionado com sucesso.");
     }
@@ -159,12 +162,11 @@ public class PersonController {
         if ( email.getEmail().isEmpty()) {
             return ResponseEntity.badRequest().body("Não foi possivel cadastrar pois está sem email.");
         }
-        Usuarios pessoa = repo.findByNome(nome);
+        Usuarios pessoa = repo.findByNome(nome).get(0);
         if (pessoa == null) {
             return ResponseEntity.notFound().build();
         }
         email.setIdUsuario(pessoa.getId());
-        email.setDataCriacao(Date.valueOf(LocalDate.now()));
         emailrepo.save(email);
 
 
@@ -178,7 +180,7 @@ public class PersonController {
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        Usuarios pessoa = repo.findByNome(nome);
+        Usuarios pessoa = repo.findByNome(nome).get(0);
         if (pessoa == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
