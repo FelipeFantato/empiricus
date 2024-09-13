@@ -1,0 +1,10 @@
+com\example\empiricus\EmailSenderService.class
+com\example\empiricus\model\Emails.class
+com\example\empiricus\EmpiricusApplication.class
+com\example\empiricus\model\Usuarios.class
+com\example\empiricus\config\AsyncConfiguration.class
+com\example\empiricus\PersonController.class
+com\example\empiricus\repo\EmailRepo.class
+com\example\empiricus\model\SessionManager.class
+com\example\empiricus\model\LoginRequest.class
+com\example\empiricus\repo\PersonRepo.class

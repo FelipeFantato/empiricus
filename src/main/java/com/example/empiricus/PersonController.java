@@ -48,7 +48,7 @@ public class PersonController {
             String token = sessionManager.createSession(user);
             return ResponseEntity.ok(token);
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nome ou senha incorretos, ou usuário não é administrador.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Nome ou senha incorretos, ou usuário não é administrador."+ user.isEhAdmin());
         }
 
     }

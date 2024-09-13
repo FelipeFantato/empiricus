@@ -226,8 +226,11 @@ public class PersonControllerTest {
         String token  = this.sessionManager.createSession(admin);
         repo.save(user1);
 
+        Optional<Usuarios> userOptional2 = repo.findByCpf("123567");
+        userOptional2.ifPresent(userDeletar -> repo.delete(userDeletar));
+
         Usuarios usuarioNovo = new Usuarios("User One123", "pwd123", true);
-        usuarioNovo.setCpf("1235");
+        usuarioNovo.setCpf("123567");
 
         ResponseEntity<Usuarios> responseEntity =  this.personController.alteraUsuario(token, "User One", usuarioNovo);
 
@@ -305,7 +308,7 @@ public class PersonControllerTest {
         // Dados de teste
         Usuarios user1 = new Usuarios("User One", "pwd123", true);
         user1.setCpf("12345678911");
-        Optional<Usuarios> userOptional = repo.findByCpf("1235");
+        Optional<Usuarios> userOptional = repo.findByCpf("12345678911");
         userOptional.ifPresent(userDeletar -> repo.delete(userDeletar));
         Usuarios admin = new Usuarios("admin", "admin", true);
         String token  = this.sessionManager.createSession(admin);
@@ -343,9 +346,10 @@ public class PersonControllerTest {
         // Dados de teste
         Usuarios user1 = new Usuarios("User One", "pwd123", true);
         user1.setCpf("123");
-        Optional<Usuarios> userOptional = repo.findByCpf("1235");
+        Optional<Usuarios> userOptional = repo.findByCpf("123");
         userOptional.ifPresent(userDeletar -> repo.delete(userDeletar));
         Usuarios admin = new Usuarios("admin", "admin", true);
+        repo.save(user1);
         String token  = this.sessionManager.createSession(admin);
 
         Emails novoEmail = new Emails("teste@teste.com", user1.getId());
@@ -361,7 +365,7 @@ public class PersonControllerTest {
         // Dados de teste
         Usuarios user1 = new Usuarios("User One", "pwd123", true);
         user1.setCpf("123");
-        Optional<Usuarios> userOptional = repo.findByCpf("1235");
+        Optional<Usuarios> userOptional = repo.findByCpf("123");
         userOptional.ifPresent(userDeletar -> repo.delete(userDeletar));
         Usuarios admin = new Usuarios("admin", "admin", true);
         String token  = this.sessionManager.createSession(admin);
@@ -379,11 +383,11 @@ public class PersonControllerTest {
         // Dados de teste
         Usuarios user1 = new Usuarios("User One", "pwd123", true);
         user1.setCpf("123");
-        Optional<Usuarios> userOptional = repo.findByCpf("1235");
+        Optional<Usuarios> userOptional = repo.findByCpf("123");
         userOptional.ifPresent(userDeletar -> repo.delete(userDeletar));
         Usuarios admin = new Usuarios("admin", "admin", true);
         String token  = this.sessionManager.createSession(admin);
-
+        repo.save(user1);
         Emails novoEmail = new Emails("teste@teste.com", user1.getId());
         ResponseEntity<List<Emails>> responseEntity =  this.personController.retornaEmailsUsuario(token,"User One"  );
 
@@ -439,7 +443,15 @@ public class PersonControllerTest {
         Usuarios admin = new Usuarios("admin", "admin", true);
         String token  = this.sessionManager.createSession(admin);
 
+
         Emails novoEmail = new Emails("teste@teste.com", user1.getId());
+
+        Optional<Emails> userOptionalEmail = Optional.ofNullable(emailrepo.findByEmail("teste@teste.com"));
+        userOptionalEmail.ifPresent(novoEmailDeletar -> emailrepo.delete(novoEmailDeletar));
+
+
+        this.personController.addEmail(token,novoEmail,"User One"  );
+
         ResponseEntity<String> responseEntity =  this.personController.deletaEmail(token,"teste@teste.com"  );
 
 

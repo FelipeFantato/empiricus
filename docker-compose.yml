@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:10.5
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres  # Banco de dados inicial para PostgreSQL
+    ports:
+      - '5438:5432'
+    volumes:
+      - ./sql/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+    command: ["sh", "-c", "docker-entrypoint.sh postgres"]
+
+  app:
+    image: openjdk:17
+    restart: always
+    volumes:
+      - ./target/empiricus-0.0.1-SNAPSHOT.jar:/app/empiricus.jar
+    command: ["java", "-jar", "/app/empiricus.jar"]
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/empiricus
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - '8080:8080'  # Mapeie a porta da sua aplicação para a porta 8080
