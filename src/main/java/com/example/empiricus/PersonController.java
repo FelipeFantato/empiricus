@@ -7,6 +7,7 @@ import com.example.empiricus.model.SessionManager;
 import com.example.empiricus.model.Usuarios;
 import com.example.empiricus.repo.EmailRepo;
 import com.example.empiricus.repo.PersonRepo;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -22,17 +23,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+
 @RestController
 public class PersonController {
 
     @Autowired
     private EmailSenderService emailSenderService;
+
     @Autowired
     PersonRepo repo;
+
     @Autowired
     @Qualifier("emailRepo") // Use o nome do bean correto
     EmailRepo emailrepo;
-    private static SessionManager sessionManager = new SessionManager();
+
+    @Autowired
+    private SessionManager sessionManager;
 
 
     @PostMapping("/api/login")
@@ -50,12 +56,16 @@ public class PersonController {
     public ResponseEntity<String> deletaUsuario(
             @RequestHeader("Authorization") String token,
             @RequestHeader("nome") String nome) {
-
+        Usuarios usuarioDeletar = null;
         Usuarios loggedInUser = sessionManager.getUser(token);
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario não esta logado.");
         }
-        Usuarios usuarioDeletar= repo.findByNome(nome).get(0);
+        if(repo.findByNome(nome).size() != 0){
+             usuarioDeletar= repo.findByNome(nome).get(0);
+        }else{
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não existe.");
+        }
 
         if( usuarioDeletar == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não existe.");
@@ -76,11 +86,16 @@ public class PersonController {
             @RequestBody Usuarios person) {
 
         Usuarios loggedInUser = sessionManager.getUser(token);
+        Usuarios pessoa = null;
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        Usuarios pessoa = repo.findByNome(nome).get(0);
+        if(repo.findByNome(nome).size() != 0){
+            pessoa = repo.findByNome(nome).get(0);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
         if (pessoa == null) {
             return ResponseEntity.notFound().build();
         }
@@ -108,11 +123,18 @@ public class PersonController {
     @GetMapping("/api/usuario")
     public ResponseEntity<Usuarios>  retornaUsuario(@RequestHeader("Authorization") String token,
                                                     @RequestHeader("nome") String nome){
+        Usuarios pessoa = null;
         Usuarios loggedInUser = sessionManager.getUser(token);
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        Usuarios pessoa = repo.findByNome(nome).get(0);
+        if(repo.findByNome(nome).size() != 0){
+            pessoa= repo.findByNome(nome).get(0);
+
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+
+        }
         if (pessoa == null) {
             return ResponseEntity.notFound().build();
         }
@@ -143,7 +165,7 @@ public class PersonController {
             return ResponseEntity.badRequest().body(person.camposCertos());
         }
         if(person.getCpf().length() < 11){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("CPF com menos de 11 digitos. Favor tentar novamente.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("CPF com menos de 11 digitos. Favor tentar novamente.");
         }
         repo.save(person);
         return ResponseEntity.ok("Usuário adicionado com sucesso.");
@@ -162,7 +184,14 @@ public class PersonController {
         if ( email.getEmail().isEmpty()) {
             return ResponseEntity.badRequest().body("Não foi possivel cadastrar pois está sem email.");
         }
-        Usuarios pessoa = repo.findByNome(nome).get(0);
+        Usuarios pessoa = null;
+        if(repo.findByNome(nome).size() != 0){
+            pessoa = repo.findByNome(nome).get(0);
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário não existe.");
+        }
+
+
         if (pessoa == null) {
             return ResponseEntity.notFound().build();
         }
@@ -180,10 +209,13 @@ public class PersonController {
         if (loggedInUser == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        Usuarios pessoa = repo.findByNome(nome).get(0);
-        if (pessoa == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        Usuarios pessoa = null;
+        if(repo.findByNome(nome).size() != 0){
+            pessoa = repo.findByNome(nome).get(0);
+        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+
 
         long idUsuario = pessoa.getId(); // Substitua pelo ID desejado
         List<Emails> listaFinal = emailrepo.findByIdUsuario(idUsuario);
@@ -215,7 +247,7 @@ public class PersonController {
         Emails emailDeletar= emailrepo.findByEmail(email);
 
         if( emailDeletar == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email não existe.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email não existe.");
         }
         Optional<Usuarios> usuarioOptional = repo.findById(emailDeletar.getIdUsuario());
         if (usuarioOptional.isPresent()) {

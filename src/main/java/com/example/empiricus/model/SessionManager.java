@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Component
+@Service
 public class SessionManager {
     private Map<String, Usuarios> sessions = new HashMap<>();
 

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -22,6 +23,13 @@ public class Emails {
     private Date dataCriacao;
     private Date dataAtualizacao;
 
+    public Emails(){}
+
+    public Emails(String email, Long idUsuario) {
+        this.email = email;
+        this.idUsuario = idUsuario;
+        this.dataCriacao = Date.valueOf(LocalDate.now());
+    }
     public String getEmail() {
         return email;
     }
