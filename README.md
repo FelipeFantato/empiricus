@@ -12,7 +12,7 @@ Este projeto é uma aplicação desenvolvida com Spring Boot para gerenciar o ca
 - [Contribuição](#contribuição)
 - [Licença](#licença)
 
-## Sobre
+## Sobre    
 
 O projeto tem como objetivo fornecer uma solução para a gestão de clientes. As principais funcionalidades incluem:
 
