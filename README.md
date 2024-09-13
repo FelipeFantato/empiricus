@@ -30,7 +30,6 @@ Para inicializar o projeto é apenas necessário ter o Docker instalado em sua m
 - **Spring Data JPA**: Para interação com o banco de dados.
 - **Spring Mail**: Para envio de e-mails.
 - **Mockito/Junit**: Para testes unitários, no qual atigiu a cobertura de 87%!
-- **H2 Database**: [Se aplicável] Banco de dados em memória para testes.
 - **Docker**: Para poder realizar a segmentação em containers da aplicação e do banco de dados, consequentemente facilitar a execução da aplicação em qualquer máquina.
 
   
@@ -50,12 +49,12 @@ Siga os passos abaixo para configurar o projeto localmente:
     cd nome-do-repositorio
     ```
 
-Para iniciar a aplicação, execute o seguinte comando:
+3. Para iniciar a aplicação, execute o seguinte comando:
 
-
-```bash
-docker-compose up
-```
+  
+  ```bash
+  docker-compose up
+  ```
 
 Após a inicialização, importe para o Postman o arquivo empiricus.postman_collection
 
