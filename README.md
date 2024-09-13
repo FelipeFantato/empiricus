@@ -35,7 +35,7 @@ Siga os passos abaixo para configurar o projeto localmente:
 1. **Clone o repositório:**
 
     ```bash
-    git clone https://github.com/usuario/nome-do-repositorio.git
+    git clone https://github.com/FelipeFantato/empiricus.git
     ```
 
 2. **Navegue até o diretório do projeto:**
