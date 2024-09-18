@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>empiricus</artifactId>
+	<artifactId>gerenciador_usuarios</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>empiricus</name>
 	<description>Desafio para vaga de Desenvolvedor Jr, Felipe Fantato</description>

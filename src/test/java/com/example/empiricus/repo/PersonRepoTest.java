@@ -1,6 +1,6 @@
 package com.example.empiricus.repo;
 
-import com.example.empiricus.model.Usuarios;
+import com.example.gerenciador_usuarios.model.Usuarios;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,15 +10,12 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
 class PersonRepoTest {
     @Autowired
-    PersonRepo PersonRepo;
+    com.example.gerenciador_usuarios.repo.PersonRepo PersonRepo;
 
     @Autowired
     EntityManager entityManager;

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/empiricus.iml" filepath="$PROJECT_DIR$/empiricus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gerenciador_usuarios.iml" filepath="$PROJECT_DIR$/gerenciador_usuarios.iml" />
     </modules>
   </component>
 </project>

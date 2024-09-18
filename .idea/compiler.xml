@@ -7,13 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="empiricus" />
+        <module name="gerenciador_usuarios" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="empiricus" options="-parameters" />
+      <module name="gerenciador_usuarios" options="-parameters" />
     </option>
   </component>
 </project>

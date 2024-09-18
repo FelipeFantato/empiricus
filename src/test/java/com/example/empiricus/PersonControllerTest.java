@@ -1,17 +1,15 @@
 package com.example.empiricus;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
-import com.example.empiricus.PersonController;
-import com.example.empiricus.model.Emails;
-import com.example.empiricus.model.LoginRequest;
-import com.example.empiricus.model.SessionManager;
-import com.example.empiricus.model.Usuarios;
-import com.example.empiricus.repo.EmailRepo;
-import com.example.empiricus.repo.PersonRepo;
-import org.junit.jupiter.api.AfterAll;
+import com.example.gerenciador_usuarios.EmailSenderService;
+import com.example.gerenciador_usuarios.PersonController;
+import com.example.gerenciador_usuarios.model.Emails;
+import com.example.gerenciador_usuarios.model.LoginRequest;
+import com.example.gerenciador_usuarios.model.SessionManager;
+import com.example.gerenciador_usuarios.model.Usuarios;
+import com.example.gerenciador_usuarios.repo.EmailRepo;
+import com.example.gerenciador_usuarios.repo.PersonRepo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,16 +18,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Description;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 

@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres  # Banco de dados inicial para PostgreSQL
+      POSTGRES_DB: postgres
     ports:
       - '5438:5432'
     volumes:
@@ -15,11 +15,10 @@ services:
     command: ["sh", "-c", "docker-entrypoint.sh postgres"]
 
   app:
-    image: openjdk:17
+    build:
+      context: .
+      dockerfile: Dockerfile
     restart: always
-    volumes:
-      - ./target/empiricus-0.0.1-SNAPSHOT.jar:/app/empiricus.jar
-    command: ["java", "-jar", "/app/empiricus.jar"]
     depends_on:
       - postgres
     environment:
@@ -27,4 +26,6 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
     ports:
-      - '8080:8080'  # Mapeie a porta da sua aplicação para a porta 8080
+      - '8080:8080'
+
+  # Remova o serviço Maven se não for mais necessário
